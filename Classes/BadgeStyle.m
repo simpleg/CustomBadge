@@ -58,8 +58,13 @@
     
     id instance = [[super alloc] init];
     [instance setBadgeFontType:BadgeStyleFontTypeHelveticaNeueLight];
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
     [instance setBadgeTextColor:[UIColor whiteColor]];
     [instance setBadgeInsetColor:[UIColor redColor]];
+#else
+    [instance setBadgeTextColor:[NSColor whiteColor]];
+    [instance setBadgeInsetColor:[NSColor redColor]];
+#endif
     [instance setBadgeFrameColor:nil];
     [instance setBadgeFrame:NO];
     [instance setBadgeShadow:NO];
@@ -76,9 +81,15 @@
     
     id instance = [[super alloc] init];
     [instance setBadgeFontType:BadgeStyleFontTypeHelveticaNeueMedium];
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
     [instance setBadgeTextColor:[UIColor whiteColor]];
     [instance setBadgeInsetColor:[UIColor redColor]];
     [instance setBadgeFrameColor:[UIColor whiteColor]];
+#else
+    [instance setBadgeTextColor:[NSColor whiteColor]];
+    [instance setBadgeInsetColor:[NSColor redColor]];
+    [instance setBadgeFrameColor:[NSColor whiteColor]];
+#endif
     [instance setBadgeFrame:YES];
     [instance setBadgeShadow:YES];
     [instance setBadgeShining:YES];
@@ -87,8 +98,11 @@
 
 
 /* Create your own BadgeStyle */
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
 + (BadgeStyle*) freeStyleWithTextColor:(UIColor*)textColor withInsetColor:(UIColor*)insetColor withFrameColor:(UIColor*)frameColor withFrame:(BOOL)frame withShadow:(BOOL)shadow withShining:(BOOL)shining withFontType:(BadgeStyleFontType)fontType {
-
+#else
++ (BadgeStyle*) freeStyleWithTextColor:(NSColor*)textColor withInsetColor:(NSColor*)insetColor withFrameColor:(NSColor*)frameColor withFrame:(BOOL)frame withShadow:(BOOL)shadow withShining:(BOOL)shining withFontType:(BadgeStyleFontType)fontType {
+#endif
     id instance = [[super alloc] init];
     [instance setBadgeFontType:fontType];
     [instance setBadgeTextColor:textColor];

@@ -38,8 +38,11 @@
 
 
 @interface CustomBadge()
-
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
 @property(nonatomic) UIFont *badgeFont;
+#else
+@property(nonatomic) NSFont *badgeFont;
+#endif
 
 - (void) drawRoundedRectWithContext:(CGContextRef)context withRect:(CGRect)rect;
 - (void) drawFrameWithContext:(CGContextRef)context withRect:(CGRect)rect;
@@ -58,8 +61,10 @@
 {
 	self = [super initWithFrame:CGRectMake(0, 0, 25, 25)];
 	if(self!=nil) {
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
 		self.contentScaleFactor = [[UIScreen mainScreen] scale];
-		self.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor clearColor];
+#endif
 		self.badgeText = badgeString;
         self.badgeStyle = style;
 		self.badgeCornerRoundness = 0.4;
@@ -87,7 +92,11 @@
 	}
 	self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y, retValue.width, retValue.height);
 	self.badgeText = badgeString;
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
 	[self setNeedsDisplay];
+#else
+    [self setNeedsDisplay:YES];
+#endif
 }
 
 
@@ -138,7 +147,11 @@
 	CGContextAddArc(context, minX+radius, maxY-radius, radius, M_PI/2, M_PI, 0);
 	CGContextAddArc(context, minX+radius, minY+radius, radius, M_PI, M_PI+M_PI/2, 0);
     if (self.badgeStyle.badgeShadow) {
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
         CGContextSetShadowWithColor(context, CGSizeMake(1.0,1.0), 3, [[UIColor blackColor] CGColor]);
+#else
+        CGContextSetShadowWithColor(context, CGSizeMake(1.0,1.0), 3, [[NSColor blackColor] CGColor]);
+#endif
     }
 	CGContextFillPath(context);
 
@@ -215,21 +228,35 @@
 	CGContextStrokePath(context);
 }
 
-
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
 - (UIFont*) fontForBadgeWithSize:(CGFloat)size {
+#else
+- (NSFont*) fontForBadgeWithSize:(CGFloat)size {
+#endif
     switch (self.badgeStyle.badgeFontType) {
         case BadgeStyleFontTypeHelveticaNeueMedium:
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
             return [UIFont fontWithName:@"HelveticaNeue-Medium" size:size];
+#else
+            return [NSFont fontWithName:@"HelveticaNeue-Medium" size:size];
+#endif
             break;
         default:
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
             return [UIFont fontWithName:@"HelveticaNeue-Light" size:size];
+#else
+            return [NSFont fontWithName:@"HelveticaNeue-Light" size:size];
+#endif
             break;
     }
 }
 
 - (void)drawRect:(CGRect)rect {
-	
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
 	CGContextRef context = UIGraphicsGetCurrentContext();
+#else
+    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+#endif
 	[self drawRoundedRectWithContext:context withRect:rect];
 	
 	if(self.badgeStyle.badgeShining) {
@@ -245,10 +272,18 @@
 		if ([self.badgeText length]<2) {
             sizeOfFont += sizeOfFont * 0.20f;
 		}
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
         UIFont *textFont =  [self fontForBadgeWithSize:sizeOfFont];
+#else
+        NSFont *textFont =  [self fontForBadgeWithSize:sizeOfFont];
+#endif
         NSDictionary *fontAttr = @{ NSFontAttributeName : textFont, NSForegroundColorAttributeName : self.badgeStyle.badgeTextColor };
 		CGSize textSize = [self.badgeText sizeWithAttributes:fontAttr];
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
         CGPoint textPoint = CGPointMake((rect.size.width/2-textSize.width/2), (rect.size.height/2-textSize.height/2) - 1 );
+#else
+        CGPoint textPoint = CGPointMake((rect.size.width/2-textSize.width/2), (rect.size.height/2-textSize.height/2) + 1.5 );
+#endif
 		[self.badgeText drawAtPoint:textPoint withAttributes:fontAttr];
 	}
 }

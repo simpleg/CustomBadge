@@ -32,12 +32,20 @@
  SOFTWARE.
 
 */
+#import <TargetConditionals.h>
 
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
 #import <UIKit/UIKit.h>
+#else
+#import <APPKit/APPKit.h>
+#endif
 #import <QuartzCore/QuartzCore.h>
 #import "BadgeStyle.h"
-
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
 @interface CustomBadge : UIView {
+#else
+@interface CustomBadge : NSView {
+#endif
 	NSString *badgeText;
 	CGFloat badgeCornerRoundness;
 	CGFloat badgeScaleFactor;

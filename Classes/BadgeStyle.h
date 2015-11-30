@@ -33,9 +33,13 @@
  */
 
 
+#import <TargetConditionals.h>
 
-
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
 #import <UIKit/UIKit.h>
+#else
+#import <APPKit/AppKit.h>
+#endif
 
 typedef enum : NSUInteger {
     BadgeStyleFontTypeHelveticaNeueMedium,
@@ -43,19 +47,29 @@ typedef enum : NSUInteger {
 } BadgeStyleFontType;
 
 @interface BadgeStyle : NSObject {
-
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
     UIColor *badgeTextColor;
     UIColor *badgeInsetColor;
     UIColor *badgeFrameColor;
+#else
+    NSColor *badgeTextColor;
+    NSColor *badgeInsetColor;
+    NSColor *badgeFrameColor;
+#endif
     BOOL badgeFrame;
     BOOL badgeShining;
     BadgeStyleFontType badgeFontType;
 
 }
-
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
 @property(nonatomic, strong) UIColor *badgeTextColor;
 @property(nonatomic, strong) UIColor *badgeInsetColor;
 @property(nonatomic, strong) UIColor *badgeFrameColor;
+#else
+@property(nonatomic, strong) NSColor *badgeTextColor;
+@property(nonatomic, strong) NSColor *badgeInsetColor;
+@property(nonatomic, strong) NSColor *badgeFrameColor;
+#endif
 @property(nonatomic) BadgeStyleFontType badgeFontType;
 @property(nonatomic) BOOL badgeFrame;
 @property(nonatomic) BOOL badgeShining;
@@ -64,7 +78,11 @@ typedef enum : NSUInteger {
 
 + (BadgeStyle*) defaultStyle;
 + (BadgeStyle*) oldStyle;
+#if (TARGET_IPHONE_SIMULATOR || TARGET_OS_IPHONE)
 + (BadgeStyle*) freeStyleWithTextColor:(UIColor*)textColor withInsetColor:(UIColor*)insetColor withFrameColor:(UIColor*)frameColor withFrame:(BOOL)frame withShadow:(BOOL)shadow withShining:(BOOL)shining withFontType:(BadgeStyleFontType)fontType;
+#else
++ (BadgeStyle*) freeStyleWithTextColor:(NSColor*)textColor withInsetColor:(NSColor*)insetColor withFrameColor:(NSColor*)frameColor withFrame:(BOOL)frame withShadow:(BOOL)shadow withShining:(BOOL)shining withFontType:(BadgeStyleFontType)fontType;
+#endif
 
 
 @end
